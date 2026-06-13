@@ -1,229 +1,249 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Golddiggers
 {
+    enum CellType
+    {
+        OurGuy,
+        Diamond,
+        Ground,
+        Grass,
+        Tree,
+        Stone
+    }
+
     internal class Program
     {
-        static char contentUnderPlayer = '▓';
-        static int diamondCount=0;
+        static int diamondCount = 0;
         static int collectedDiamonds = 0;
-        static int maxX = Console.WindowHeight;
-        static int maxY = Console.WindowWidth;
+        static CellType contentUnderPlayer = CellType.Ground;
+
         static void Main(string[] args)
         {
-            int x = 0;
-            int y = 0;
-            
-            Console.SetWindowSize(maxX, maxY);
-            Console.SetBufferSize(maxX, maxY);
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.CursorVisible = false;
 
-            do
-            {
-                Console.Write("Въведете брой редове от 10 до 50: ");
-                x = int.Parse(Console.ReadLine());
-               
-                if(x<10 || x>maxX)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Невалидни размери.");
-                    Console.ResetColor();
-                }
-            } while (x<10 || x>maxX);
-            do
-            {
-                Console.Write("Въведете брой колони от 10 до 50: ");
-                y = int.Parse(Console.ReadLine());
+            int maxX = Console.WindowHeight - 5;
+            int maxY = Console.WindowWidth - 5;
 
-                if (y<10 || y>maxY)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Невалидни размери.");
-                    Console.ResetColor();
-                }
-            } while (y<10 || y>maxY);
             Console.Clear();
-            char[,] field=GetFieldBounds(x, y);
-            field=CreateField(field,x,y);
 
-            int playerRow = 0;
-            int playerCol = 0;
+            CellType[,] field = GetFieldBounds(maxX, maxY);
+            if (field == null) return;
 
+            int x = field.GetLength(0);
+            int y = field.GetLength(1);
 
-            for (int i = 0; i < field.GetLength(0); i++)
+            diamondCount = CreateField(field, x, y);
+
+            int playerRow = 0, playerCol = 0;
+            for (int i = 0; i < x; i++)
             {
-                for (int j = 0; j < field.GetLength(1); j++)
+                for (int j = 0; j < y; j++)
                 {
-                    if (field[i, j] == '☺')
+                    if (field[i, j] == CellType.OurGuy)
                     {
                         playerRow = i;
                         playerCol = j;
                     }
                 }
             }
-                while (true)
-            {
-                DrawField(field);
+            Console.Clear();
+            ConsoleKeyInfo keyInfo = new ConsoleKeyInfo();
+            DrawField(field);
 
-                if (collectedDiamonds == diamondCount)
+            while (collectedDiamonds < diamondCount && keyInfo.Key != ConsoleKey.Escape)
+            {
+                keyInfo = Console.ReadKey(true);
+
+                string direction = "";
+                if (keyInfo.Key == ConsoleKey.W || keyInfo.Key == ConsoleKey.UpArrow) direction = "UP";
+                if (keyInfo.Key == ConsoleKey.S || keyInfo.Key == ConsoleKey.DownArrow) direction = "DOWN";
+                if (keyInfo.Key == ConsoleKey.A || keyInfo.Key == ConsoleKey.LeftArrow) direction = "LEFT";
+                if (keyInfo.Key == ConsoleKey.D || keyInfo.Key == ConsoleKey.RightArrow) direction = "RIGHT";
+
+                if (direction != "")
                 {
-                    Console.Clear();
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Поздравления!");
-                    Console.WriteLine("Събра всички диаманти!");
-                    Console.ResetColor();
-                    break;
+                    (playerRow, playerCol) = MoveOurGuy(field, direction, playerRow, playerCol);
                 }
 
-
-                (playerRow, playerCol) = MoveOurGuy(field, playerRow, playerCol);
+                if (collectedDiamonds < diamondCount && keyInfo.Key != ConsoleKey.Escape)
+                {
+                    DrawField(field);
+                }
             }
 
+            Console.Clear();
+            double percent = ((double)collectedDiamonds / diamondCount) * 100;
 
-        }
-        static char[,] GetFieldBounds(int x,int y)
-        {
-            if (x>=10 && y>=10 && x<=maxX && y<=maxY)
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            if (collectedDiamonds == diamondCount)
             {
-                char[,] field = new char[x, y];
-                return field;
+                Console.WriteLine("ПОЗДРАВЛЕНИЯ! Събрахте всички диаманти!");
             }
             else
             {
-                Console.WriteLine("Невалиден размер.");
-                return null;
+                Console.WriteLine("Играта приключи.");
             }
+            Console.WriteLine($"Успешно събрани диаманти: {percent:F1}% ({collectedDiamonds} от {diamondCount})");
+            Console.ResetColor();
+
             
         }
-        static char[,] CreateField(char[,] field, int m, int n)
+
+        static CellType[,] GetFieldBounds(int maxX, int maxY)
+        {
+            int x = 0, y = 0;
+
+            do
+            {
+                Console.Write($"Въведете брой редове (между 11 и {maxX}): ");
+                if (!int.TryParse(Console.ReadLine(), out x) || x <= 10 || x >= maxX)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Невалидно число или размер извън позволения диапазон.");
+                    Console.ResetColor();
+                    x = 0;
+                }
+            } while (x == 0);
+
+            do
+            {
+                Console.Write($"Въведете брой колони (между 11 и {maxY}): ");
+                if (!int.TryParse(Console.ReadLine(), out y) || y <= 10 || y >= maxY)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Невалидно число или размер извън позволения диапазон.");
+                    Console.ResetColor();
+                    y = 0;
+                }
+            } while (y == 0);
+
+            return new CellType[x, y];
+        }
+
+        static int CreateField(CellType[,] field, int m, int n)
         {
             Random rnd = new Random();
-            diamondCount=(m*n)/10;
-            for(int i = 0; i<m; i++)
+            int totalDiamonds = (m * n) / 10;
+            if (totalDiamonds == 0) totalDiamonds = 1;
+
+            for (int i = 0; i < m; i++)
             {
-                for (int j = 0; j<n; j++)
+                for (int j = 0; j < n; j++)
                 {
                     int chance = rnd.Next(1, 101);
-                    if (chance<=40) field[i, j]= '▒';
-                    else if (chance<=70) field[i, j]= '▓';
-                    else if (chance<=90) field[i, j]= '♣';
-                    else field[i, j]='٥';
+                    if (chance <= 40) field[i, j] = CellType.Ground;
+                    else if (chance <= 70) field[i, j] = CellType.Grass;
+                    else if (chance <= 90) field[i, j] = CellType.Tree;
+                    else field[i, j] = CellType.Stone;
                 }
             }
-            int r = 0;
-            int c = 0;
+
             int postaveniDiamonds = 0;
-            while (postaveniDiamonds<diamondCount)
+            while (postaveniDiamonds < totalDiamonds)
             {
-                r = rnd.Next(m);
-                c = rnd.Next(n);
-                if (field[r, c] != '♦')
+                int r = rnd.Next(m);
+                int c = rnd.Next(n);
+                if (field[r, c] != CellType.Diamond)
                 {
-                    field[r, c]='♦';
+                    field[r, c] = CellType.Diamond;
                     postaveniDiamonds++;
                 }
             }
+
+            int pr, pc;
             do
             {
-                r = rnd.Next(m);
-                c = rnd.Next(n);
-            } while (field[r, c] == '♦');
+                pr = rnd.Next(m);
+                pc = rnd.Next(n);
+            } while (field[pr, pc] == CellType.Diamond);
 
-          
-            field[r, c] = '☺';
+            contentUnderPlayer = field[pr, pc];
+            field[pr, pc] = CellType.OurGuy;
 
-            return field;
+            return totalDiamonds;
         }
-        static void DrawField(char[,] field)
+
+        static void DrawField(CellType[,] field)
         {
             Console.SetCursorPosition(0, 0);
-            Console.CursorVisible = false;
-            for (int i = 0; i<field.GetLength(0); i++)
+
+            for (int i = 0; i < field.GetLength(0); i++)
             {
-                for(int j = 0; j<field.GetLength(1); j++)
+                for (int j = 0; j < field.GetLength(1); j++)
                 {
-                    if (field[i, j] == '▒')
+                    CellType cell = field[i, j];
+
+                    if (cell == CellType.Ground)
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("▒");
                     }
-                    else if (field[i, j] == '▓')
+                    else if (cell == CellType.Grass)
                     {
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.Write("▓");
                     }
-                    else if (field[i, j] == '♣')
+                    else if (cell == CellType.Tree)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
                         Console.Write("♣");
                     }
-                    else if (field[i, j] == '٥')
+                    else if (cell == CellType.Stone)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.Write("٥");
                     }
-                    else if (field[i, j] == '♦')
+                    else if (cell == CellType.Diamond)
                     {
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.Write("♦");
                     }
-                    else if (field[i, j] == '☺')
+                    else if (cell == CellType.OurGuy)
                     {
-                        Console.ForegroundColor = ConsoleColor.Cyan; 
+                        Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.Write("☺");
                     }
                 }
                 Console.WriteLine();
-                
-
             }
-           
-            Console.ResetColor();
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"Диаманти: {collectedDiamonds}/{diamondCount}");
 
+            Console.ResetColor();
+            Console.WriteLine($"\nСъбрани диаманти: {collectedDiamonds} / {diamondCount}   ");
+            Console.WriteLine("Натиснете [ESC] за отказване от играта.");
         }
-        static (int, int) MoveOurGuy(char[,] field, int playerRow, int playerCol)
+
+        static (int, int) MoveOurGuy(CellType[,] field, string direction, int playerRow, int playerCol)
         {
             int rows = field.GetLength(0);
             int cols = field.GetLength(1);
 
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-
             int nextRow = playerRow;
             int nextCol = playerCol;
 
-            if (keyInfo.Key == ConsoleKey.W || keyInfo.Key == ConsoleKey.UpArrow) nextRow--;
-            if (keyInfo.Key == ConsoleKey.S || keyInfo.Key == ConsoleKey.DownArrow) nextRow++;
-            if (keyInfo.Key == ConsoleKey.A || keyInfo.Key == ConsoleKey.LeftArrow) nextCol--;
-            if (keyInfo.Key == ConsoleKey.D || keyInfo.Key == ConsoleKey.RightArrow) nextCol++;
+            if (direction == "UP") nextRow--;
+            if (direction == "DOWN") nextRow++;
+            if (direction == "LEFT") nextCol--;
+            if (direction == "RIGHT") nextCol++;
 
             if (nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols)
             {
                 field[playerRow, playerCol] = contentUnderPlayer;
-
-                
                 contentUnderPlayer = field[nextRow, nextCol];
 
-
-                if (contentUnderPlayer == '♦')
+                if (contentUnderPlayer == CellType.Diamond)
                 {
                     collectedDiamonds++;
-                    contentUnderPlayer = '▓';
+                    contentUnderPlayer = CellType.Ground;
                 }
 
-                
-                field[nextRow, nextCol] = '☺';
+                field[nextRow, nextCol] = CellType.OurGuy;
                 return (nextRow, nextCol);
             }
 
             return (playerRow, playerCol);
         }
-
     }
 }

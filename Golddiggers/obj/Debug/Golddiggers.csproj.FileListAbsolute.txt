@@ -6,3 +6,11 @@ C:\Users\1212-7\Desktop\Zdravka9a\Golddiggers\Golddiggers\obj\Debug\Golddiggers.
 C:\Users\1212-7\Desktop\Zdravka9a\Golddiggers\Golddiggers\obj\Debug\Golddiggers.pdb
 C:\Users\1212-7\Desktop\Zdravka9a\Golddiggers\Golddiggers\bin\Debug\Golddiggers.pdb
 C:\Users\1212-7\Desktop\Zdravka9a\Golddiggers\Golddiggers\obj\Debug\Golddiggers.exe.config
+C:\Users\Admin\Source\Repos\Golddiggers\Golddiggers\bin\Debug\Golddiggers.exe.config
+C:\Users\Admin\Source\Repos\Golddiggers\Golddiggers\bin\Debug\Golddiggers.exe
+C:\Users\Admin\Source\Repos\Golddiggers\Golddiggers\bin\Debug\Golddiggers.pdb
+C:\Users\Admin\Source\Repos\Golddiggers\Golddiggers\obj\Debug\Golddiggers.csproj.AssemblyReference.cache
+C:\Users\Admin\Source\Repos\Golddiggers\Golddiggers\obj\Debug\Golddiggers.exe.config
+C:\Users\Admin\Source\Repos\Golddiggers\Golddiggers\obj\Debug\Golddiggers.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Source\Repos\Golddiggers\Golddiggers\obj\Debug\Golddiggers.exe
+C:\Users\Admin\Source\Repos\Golddiggers\Golddiggers\obj\Debug\Golddiggers.pdb

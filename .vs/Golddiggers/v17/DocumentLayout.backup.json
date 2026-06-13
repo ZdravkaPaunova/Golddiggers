@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\1212-7\\Desktop\\Zdravka9a\\Golddiggers\\",
+  "WorkspaceRootPath": "C:\\Users\\Admin\\source\\repos\\Golddiggers\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5045D41F-1053-41DC-92FB-25EADF40020E}|Golddiggers\\Golddiggers.csproj|c:\\users\\1212-7\\desktop\\zdravka9a\\golddiggers\\golddiggers\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{5045D41F-1053-41DC-92FB-25EADF40020E}|Golddiggers\\Golddiggers.csproj|c:\\users\\admin\\source\\repos\\golddiggers\\golddiggers\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5045D41F-1053-41DC-92FB-25EADF40020E}|Golddiggers\\Golddiggers.csproj|solutionrelative:golddiggers\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -20,14 +20,18 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\1212-7\\Desktop\\Zdravka9a\\Golddiggers\\Golddiggers\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\Golddiggers\\Golddiggers\\Program.cs",
               "RelativeDocumentMoniker": "Golddiggers\\Program.cs",
-              "ToolTip": "C:\\Users\\1212-7\\Desktop\\Zdravka9a\\Golddiggers\\Golddiggers\\Program.cs*",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\Golddiggers\\Golddiggers\\Program.cs*",
               "RelativeToolTip": "Golddiggers\\Program.cs*",
-              "ViewState": "AgIAAJsAAAAAAAAAAAAIwK0AAABPAAAAAAAAAA==",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAYwFwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-10T05:32:03.002Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{56df62a4-05a3-4e5b-aa1a-99371ccfb997}"
             }
           ]
         }
